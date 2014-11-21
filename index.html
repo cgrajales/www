@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<title>Silogtran Mobile</title> 
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="css/jquery.mobile-1.4.2.min.css" />
+	<!--<link rel="stylesheet" href="css/styles.css" />-->
+
+        <script src="js/jquery.js"></script>
+        <script src="js/jquery.mobile-1.4.2.min.js"></script>
+        <!--<script src="cordova.js"></script>-->
+    
+        
+
+<script>
+
+    var datos;
+    $(document ).on( "pagecreate", function() {
+	$("#loginaceptar").click(function() {
+	  var estado=login("LOGIN");
+       
+	  if(estado==0){
+	    
+	      //$("#password").val('');
+	    
+	  }
+	  else {
+		$(location).attr('href',"#menu"); 
+	  
+	  }
+	
+    });
+    
+    var prsid    = $("#prsid").val().trim();
+    var sroid    = $("#sroid").val().trim();
+    var stiid    = $("#stiid").val().trim();
+    var prbid    = $("#idprueba").val().trim();
+      
+    
+    if(prbid=="0"){
+      
+      var cadena1="";
+      
+        $.ajax({
+	    url: "http://www.colombiasoftware.net/base/webservice/mobileicfesv2.php",
+	    dataType: 'jsonp',
+	    data:{funcion:'prueba'},
+	    success: function (data) {	  
+	      for(x=0;x<data.length;x++){
+		cadena1+="<option value='"+data[x].prbid+"'>"+data[x].prbnombre+"</option>";
+	      }
+	      
+	      $('#listadoprueba').empty();
+	      $('#listadoprueba').append("<label for='usuario'>Prueba:</label><select name='usuarioprueba' id='usuarioprueba' data-mini='true' data-inline='true' data-theme='b'>"+cadena1+"</select>");
+	
+	     }
+	});
+          //alert(cadena1);
+      	     
+    }  
+      
+      
+    
+    $("#llamada").click(function() {
+        var idpruebac=$("#idprueba").val().trim();
+        var prsidc    = $("#prsid").val().trim();
+	var sroidc    = $("#sroid").val().trim();
+	var stiidc    = $("#stiid").val().trim();
+        $.ajax({
+	    url: "http://www.colombiasoftware.net/base/webservice/mobileicfesv2.php",
+	    dataType: 'jsonp',
+	    data:{funcion:'llamar',prsid:prsidc,sroid:sroidc,stiid:stiidc,prueba:idpruebac},
+	    success: function (data) {	  
+	      
+	    }
+	});
+	
+	//alert("Llamada Solicitada");
+	
+    });
+    
+    
+    
+   
+   $('#reunion').on('pageshow', function (event,ui) {
+   //$.mobile.changePage( "#dialogohoras", { role: "dialog" } );
+    reunion();
+   });
+   
+    $('#prueba').on('pageshow', function (event,ui) {
+   //$.mobile.changePage( "#dialogohoras", { role: "dialog" } );
+    consultaprueba();
+   });
+   
+   
+   $('#calificacion').on('pageshow', function (event,ui) {
+   //$.mobile.changePage( "#dialogohoras", { role: "dialog" } );
+    calificacion();
+   });
+   
+   
+});       
+
+
+
+function calificacion(){
+
+
+	var valorPersona    = $("#prsid").val().trim();
+	
+	var tabla = $('#informacioncalificacion');
+	var idprueba=$("#idprueba").val().trim();
+
+        var cadena1;      
+        var calificacion;
+        var salonasignado;
+        var valorprueba;
+       
+         
+	
+	$.ajax({
+	    url: "http://www.colombiasoftware.net/base/webservice/mobileicfesv2.php",
+	    dataType: 'jsonp',
+	    data:{funcion:'informacionReunion',prsid:valorPersona,prueba:idprueba},
+	    success: function (data) {
+	   // console.log(data);
+	    tabla.empty();
+		  for(x=0;x<data.length;x++){
+		  
+			
+	
+		
+			selected="";
+			cadena3="<option value=''></option>";
+			if(data[x].calificacion=="0"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='0' "+selected+">0</option>";
+			if(data[x].calificacion=="50"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='50' "+selected+">50</option>";
+			if(data[x].calificacion=="100"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='100' "+selected+">100</option>";
+			if(data[x].calificacion=="150"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='150' "+selected+">150</option>";
+			if(data[x].calificacion=="200"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='200' "+selected+">200</option>";
+			if(data[x].calificacion=="250"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='250' "+selected+">250</option>";
+			if(data[x].calificacion=="300"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='300' "+selected+">300</option>";
+			if(data[x].calificacion=="350"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='350' "+selected+">350</option>";
+			if(data[x].calificacion=="400"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='400' "+selected+">400</option>";
+			if(data[x].calificacion=="450"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='450' "+selected+">450</option>";
+			if(data[x].calificacion=="500"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='500' "+selected+">500</option>";
+			
+	  
+	
+	
+			salonasignado="<input type='text'  data-clear-btn='true' name='posicion2"+x+"_10' id='posicion2"+x+"_10' value='"+data[x].salon+"' autocomplete='off' onblur='reportar2("+x+","+data[x].prsid+",1)' >";
+			valorprueba="<select name='posicion2"+x+"_11' id='posicion2"+x+"_11' onblur='reportar2("+x+","+data[x].prsid+",1)'>"+cadena3+"</select>";
+		    
+			
+			
+		    
+			cadenafinal="<ul data-role='listview' data-inset='true' class='ui-listview ui-listview-inset ui-corner-all ui-shadow'>";
+			cadenafinal+="<li data-role='list-divider' role='heading' class='ui-li-divider ui-bar-inherit ui-first-child'>"+(x+1)+" - "+data[x].nombre+"</li>";
+			cadenafinal+="<li class='ui-li-static ui-body-inherit'><h1>"+data[x].prsdocumento+"-"+data[x].cargo+"</h1><div id='posicion2"+x+"_9' style='display: none;'>Registrado</div><h3>Salon Asignado</h3>"+salonasignado+"<h3>Calificacion</h3>"+valorprueba;
+			
+			
+			cadenafinal+="<input type='button' value='Enviar' onclick='reportar2("+x+","+data[x].prsid+",2)' /></li></ul>";
+		        
+			tabla.append(cadenafinal);
+			
+			  
+		    }
+		      
+		  }
+	    
+
+	});
+	
+	
+}
+
+
+
+
+
+function login(tipo){
+
+
+	var valorLogin    = $("#usuario").val().trim();
+	var valorPassword = $("#password").val().trim();
+	var valorPrueba   = $("#usuarioprueba").val().trim();
+      
+	
+	$.ajax({
+	    url: "http://www.colombiasoftware.net/base/webservice/mobileicfesv2.php",
+	    dataType: 'jsonp',
+	    data:{funcion:'validaUsuario',usuario:valorLogin,clave:valorPassword,prueba:valorPrueba},
+	    success: function (data) {
+		  for(x=0;x<data.length;x++){
+		  
+		    if(data[x].resultado=="0"){
+			alert( data[x].texto);
+		    }
+		    else{
+			$("#valida").val("1");
+			$("#stiid").val( data[x].stiid);
+			$("#sticodigo").val( data[x].sticodigo);
+			$("#stinombre").val( data[x].stinombre);
+			$("#cargonombre").val( data[x].cargonombre);
+			$("#crgid").val( data[x].crgid);
+			$("#sroid").val( data[x].sroid);
+			$("#cddnombre").val(data[x].ciudad);
+			$("#stidireccion").val(data[x].direccion);
+			$("#prsid").val(data[x].prsid);
+		
+		
+			$("#codigositio").val( data[x].sticodigo);
+			$("#sitio").val( data[x].stinombre);
+			$("#cargo").val( data[x].cargonombre);
+			$("#ciudad").val(data[x].ciudad);
+			$("#direccion").val(data[x].direccion);
+			
+			$("#nombreprueba").val(data[x].nombreprueba);
+			$("#idprueba").val(data[x].idprueba);
+			
+		    }
+		    
+		  }
+	    }
+
+	});
+	
+	return $("#valida").val();
+}
+
+
+function reportar2(detalle,persona,tipo){
+
+  var salonasignado=$("#posicion2"+detalle+"_10").val().trim();
+  var valorprueba  =$("#posicion2"+detalle+"_11").val().trim();;
+  var idprueba     =$("#idprueba").val().trim();
+  var sroid        = $("#sroid").val().trim();
+
+ 
+  
+  
+   $.ajax({
+	    url: "http://www.colombiasoftware.net/base/webservice/mobileicfesv2.php",
+	    dataType: 'jsonp',
+	    data:{funcion:'reportarAdicional',persona:persona,sroid:sroid,salonasignado:salonasignado,calificacion:valorprueba,prueba:idprueba},
+	    success: function (data) {	  
+	    }
+	});
+  
+  
+  if(tipo==2 ){
+    alert("Informacion Enviada");
+  }
+  
+  
+}
+
+
+
+function reportar(detalle,persona,tipo){
+
+  var llegada      =$("#posicion"+detalle+"_6").val().trim();
+  var salida       =$("#posicion"+detalle+"_7").val().trim();
+  var observacion  =$("#posicion"+detalle+"_8").val().trim();
+  var salonasignado=$("#posicion"+detalle+"_10").val().trim();
+  var valorprueba  ='';
+  var idprueba=$("#idprueba").val().trim();
+  
+  var sroid        = $("#sroid").val().trim();
+
+ 
+  
+  
+   $.ajax({
+	    url: "http://www.colombiasoftware.net/base/webservice/mobileicfesv2.php",
+	    dataType: 'jsonp',
+	    data:{funcion:'reportar',persona:persona,llegada:llegada,salida:salida,observacion:observacion,sroid:sroid,salonasignado:salonasignado,calificacion:valorprueba,prueba:idprueba},
+	    success: function (data) {	  
+	    }
+	});
+  
+  if(llegada!="" && salida!=""){
+    $("#posicion"+detalle+"_9").show("slow");
+  }
+  else {
+    $("#posicion"+detalle+"_9").hide("slow");
+  }
+  
+  if(tipo==2 && llegada!="" && salida!=""){
+    alert("Informacion Enviada");
+  }
+  else if(tipo==2){
+    alert("Debe Registrar Hora de Llegada y De Salida");
+  
+  }
+  
+  
+}
+
+function reunion(){
+
+
+	var valorPersona    = $("#prsid").val().trim();
+	
+	var tabla = $('#informacionreunion');
+      
+	var maximo = $("#maximasalida").val().trim();
+	var minimo = $("#minimoingreso").val().trim();
+	var idprueba=$("#idprueba").val().trim();
+	
+        var aux;
+        var cadena1;
+        var cadena2;
+        var cadena3;
+        var llegada;
+        var salida;
+        var salon;
+        var calificacion;
+        var select0;
+        var select10;
+        var select20;
+        var select30;
+        var select40;
+        var select50;
+        var selected;
+        var y;
+        var observacion;
+        var cadenafinal;
+        var salonasignado;
+        var valorprueba;
+        
+        if(maximo<minimo){
+	    aux=minimo;
+	    minimo=maximo;
+	    maximo=aux;
+        } 
+       /* if(maximo==minimo){
+	  maximo++;
+        }
+         minimo++;*/
+         maximo++;
+         
+	
+	$.ajax({
+	    url: "http://www.colombiasoftware.net/base/webservice/mobileicfesv2.php",
+	    dataType: 'jsonp',
+	    data:{funcion:'informacionReunion',prsid:valorPersona,prueba:idprueba},
+	    success: function (data) {
+	   // console.log(data);
+	    tabla.empty();
+		  for(x=0;x<data.length;x++){
+		  
+			llegada =data[x].llegada;
+			salida  =data[x].salida;
+		  
+			cadena1="<select name='posicion"+x+"_6' id='posicion"+x+"_6' onchange='reportar("+x+","+data[x].prsid+",1)'>";
+			cadena1+="<option value=''></option>";
+			cadena2="<select name='posicion"+x+"_7' id='posicion"+x+"_7' onchange='reportar("+x+","+data[x].prsid+",1)'>";
+			cadena2+="<option value=''></option>";
+			for(z=minimo;z<maximo;z++){
+			    y=z;
+			    if(y=="8" || y=="9" || y=="7" ){
+			      y="0"+y;
+			    }
+			    
+			    
+			
+			
+			    if(llegada==""+y+":00"){
+			      select0="SELECTED";
+			    }
+			    if(llegada==""+y+":10"){
+			      select10="SELECTED";
+			    }
+			    if(llegada==""+y+":20"){
+			      select20="SELECTED";
+			    }
+			    if(llegada==""+y+":30"){
+			      select30="SELECTED";
+			    }
+			    if(llegada==""+y+":40"){
+			      select40="SELECTED";
+			    }
+			    if(llegada==""+y+":50"){
+			      select50="SELECTED";
+			    }
+			    
+			    
+			    cadena1+="<option value='"+y+":00' "+select0+">"+y+":00</option>";
+			    cadena1+="<option value='"+y+":10' "+select10+">"+y+":10</option>";
+			    cadena1+="<option value='"+y+":20' "+select20+">"+y+":20</option>";
+			    cadena1+="<option value='"+y+":30' "+select30+">"+y+":30</option>";
+			    cadena1+="<option value='"+y+":40' "+select40+">"+y+":40</option>";
+			    cadena1+="<option value='"+y+":50' "+select50+">"+y+":50</option>";
+			    
+			      
+			    select0="";
+			    select10="";
+			    select20="";
+			    select30="";
+			    select40="";
+			    select50="";
+			    
+			    
+			    
+			    if(salida==""+y+":00"){
+			      select0="SELECTED";
+			    }
+			    if(salida==""+y+":10"){
+			      select10="SELECTED";
+			    }
+			    if(salida==""+y+":20"){
+			      select20="SELECTED";
+			    }
+			    if(salida==""+y+":30"){
+			      select30="SELECTED";
+			    }
+			    if(salida==""+y+":40"){
+			      select40="SELECTED";
+			    }
+			    if(salida==""+y+":50"){
+			      select50="SELECTED";
+			    }
+			    
+			    
+			    cadena2+="<option value='"+y+":00' "+select0+">"+y+":00</option>";
+			    cadena2+="<option value='"+y+":10' "+select10+">"+y+":10</option>";
+			    cadena2+="<option value='"+y+":20' "+select20+">"+y+":20</option>";
+			    cadena2+="<option value='"+y+":30' "+select30+">"+y+":30</option>";
+			    cadena2+="<option value='"+y+":40' "+select40+">"+y+":40</option>";
+			    cadena2+="<option value='"+y+":50' "+select50+">"+y+":50</option>";
+			    
+			      
+			    select0="";
+			    select10="";
+			    select20="";
+			    select30="";
+			    select40="";
+			    select50="";
+			    
+			    
+			    
+			    
+			    
+			    
+			    
+			}
+			if(maximo.length==1)
+			  maximo="0"+maximo;
+			 if(llegada==""+maximo+":00"){
+			      select0="SELECTED";
+			    }
+			 
+			cadena1+="<option value='"+maximo+":00' "+select0+">"+maximo+":00</option>";
+			cadena1+="</select>";
+		  
+			 select0="";
+			
+			if(salida==""+maximo+":00"){
+			      select0="SELECTED";
+			    }
+			 
+			cadena2+="<option value='"+maximo+":00' "+select0+">"+maximo+":00</option>";
+			cadena2+="</select>";
+		  
+			 select0="";
+			
+			observacion="<input type='text'  data-clear-btn='true' name='posicion"+x+"_8' id='posicion"+x+"_8' value='"+data[x].observacion+"' autocomplete='off' onblur='reportar("+x+","+data[x].prsid+",1)' >";
+	
+	
+			selected="";
+			cadena3="<option value=''></option>";
+			if(data[x].calificacion=="0"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='0' "+selected+">0</option>";
+			if(data[x].calificacion=="50"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='50' "+selected+">50</option>";
+			if(data[x].calificacion=="100"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='100' "+selected+">100</option>";
+			if(data[x].calificacion=="150"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='150' "+selected+">150</option>";
+			if(data[x].calificacion=="200"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='200' "+selected+">200</option>";
+			if(data[x].calificacion=="250"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='250' "+selected+">250</option>";
+			if(data[x].calificacion=="300"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='300' "+selected+">300</option>";
+			if(data[x].calificacion=="350"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='350' "+selected+">350</option>";
+			if(data[x].calificacion=="400"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='400' "+selected+">400</option>";
+			if(data[x].calificacion=="450"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='450' "+selected+">450</option>";
+			if(data[x].calificacion=="500"){ selected="SELECTED"; } else { selected="";}
+			
+			cadena3+="<option value='500' "+selected+">500</option>";
+			
+	  
+	
+	
+			salonasignado="<input type='text'  data-clear-btn='true' name='posicion"+x+"_10' id='posicion"+x+"_10' value='"+data[x].salon+"' autocomplete='off' onblur='reportar("+x+","+data[x].prsid+",1)' >";
+			
+		    
+			cadenafinal="<ul data-role='listview' data-inset='true' class='ui-listview ui-listview-inset ui-corner-all ui-shadow'>";
+			cadenafinal+="<li data-role='list-divider' role='heading' class='ui-li-divider ui-bar-inherit ui-first-child'>"+(x+1)+" - "+data[x].nombre+"</li>";
+			cadenafinal+="<li class='ui-li-static ui-body-inherit'><h1>"+data[x].prsdocumento+"-"+data[x].cargo+"</h1><div id='posicion"+x+"_9' style='display: none;'>Registrado</div><h3>Hora Llegada</h3>"+cadena1+"<h3>Hora Salida</h3>"+cadena2+"<h3>Salon Asignado</h3>"+salonasignado+"<h3>Observacion</h3>"+observacion;
+			
+			
+			cadenafinal+="<input type='button' value='Enviar' onclick='reportar("+x+","+data[x].prsid+",2)' /></li></ul>";
+		        
+			tabla.append(cadenafinal);
+			
+			  
+		    }
+		      
+		  }
+	    
+
+	});
+	
+	
+}
+
+
+
+function prueba(tipo,elemento){
+
+    var sroid  = $("#sroid").val().trim();
+    var stiid  = $("#stiid").val().trim();
+    var idprueba=$("#idprueba").val().trim();
+    
+    $.ajax({
+	    url: "http://www.colombiasoftware.net/base/webservice/mobileicfesv2.php",
+	    dataType: 'jsonp',
+	    data:{funcion:'reportarprueba',sroid:sroid,stiid:stiid,tipo:tipo,elemento:elemento.value,prueba:idprueba},
+	    success: function (data) {	  
+	      resultado=data;
+	       if(elemento.value.trim()!="" && resultado=="1"){
+		  $("#p"+tipo).show("slow");
+		}
+		else {
+		  $("#p"+tipo).hide("slow");
+		}
+	    }
+	});
+}
+
+
+function consultaprueba(){
+
+    var sroid  = $("#sroid").val().trim();
+    var stiid  = $("#stiid").val().trim();
+    var idprueba=$("#idprueba").val().trim();
+    
+    $.ajax({
+	    url: "http://www.colombiasoftware.net/base/webservice/mobileicfesv2.php",
+	    dataType: 'jsonp',
+	    data:{funcion:'consultaprueba',sroid:sroid,stiid:stiid,prueba:idprueba},
+	    success: function (data) {	  
+		
+		if(data[0].representante!="" && data[0].representante!="null"){
+		    $('#representantei').empty();
+		    $('#representantei').append("<div><label>Representante:</label><h2>"+data[0].representante+"</h2></div>");
+		}
+		if(data[0].delegado!=""){
+		    $('#delegadoi').empty();
+		    $('#delegadoi').append("<div><label>Delegado:</label><h2>"+data[0].delegado+"</h2></div>");
+		}
+		if(data[0].operador!=""){
+		    $('#operadori').empty();
+		    $('#roperadori').append("<div><label>Representante:</label><h2>"+data[0].operador+"</h2></div>");
+		}
+		if(data[0].material!=""){
+		    $('#materiali').empty();
+		    $('#materiali').append("<div><label>Material:</label><h2>"+data[0].material+"</h2></div>");
+		}
+	
+	
+		if(data[0].inicioprueba!=""){
+		    $('#iniciopruebamananai').empty();
+		    $('#iniciopruebamananai').append("<div><label>Inicio Prueba:</label><h2>"+data[0].inicioprueba+"</h2></div>");
+		}
+		if(data[0].finprueba!=""){
+		    $('#finpruebamananai').empty();
+		    $('#finpruebamananai').append("<div><label>Fin Prueba:</label><h2>"+data[0].finprueba+"</h2></div>");
+		}
+	      
+		if(data[0].presente!=""){
+		    $("#presentesm").val(data[0].presente);
+		    $('#presentesm').prop('disabled', 'disabled');
+		}
+		if(data[0].ausente!=""){
+		    $("#ausentesm").val(data[0].ausente);
+		    $('#ausentesm').prop('disabled', 'disabled');
+		}
+	        if(data[0].anulado!=""){
+		    $("#anuladosm").val(data[0].anulado);
+		    $('#anuladosm').prop('disabled', 'disabled');
+		    
+		}
+		
+		
+		if(data[1].inicioprueba!=""){
+		    $('#iniciopruebatardei').empty();
+		    $('#iniciopruebatardei').append("<div><label>Inicio Prueba:</label><h2>"+data[1].inicioprueba+"</h2></div>");
+		}
+		if(data[1].finprueba!=""){
+		    $('#finpruebatardei').empty();
+		    $('#finpruebatardei').append("<div><label>Fin Prueba:</label><h2>"+data[1].finprueba+"</h2></div>");
+		}
+		
+		if(data[1].presente!=""){
+		    $("#presentest").val(data[1].presente);
+		    $('#presentest').prop('disabled', 'disabled');
+		}
+		if(data[1].ausente!=""){
+		    $("#ausentest").val(data[1].ausente);
+		    $('#ausentest').prop('disabled', 'disabled');
+		}
+	        if(data[1].anulado!=""){
+		    $("#anuladost").val(data[1].anulado);
+		    $('#anuladost').prop('disabled', 'disabled');
+		   
+		}
+	      
+	      
+	      
+	      
+	    }
+	});
+}
+
+
+function geolocalizacion(){
+ 
+    alert("Recuerde Activar Su Gps ...");
+    navigator.geolocation.getCurrentPosition(onSuccess, onError);
+}
+
+function onSuccess(position) {
+       
+       
+         var element = document.getElementById('geolocation');
+        element.innerHTML = 'Latitude: '           + position.coords.latitude              + '<br />' +
+                            'Longitude: '          + position.coords.longitude             + '<br />' +
+                            'Altitude: '           + position.coords.altitude              + '<br />' +
+                            'Accuracy: '           + position.coords.accuracy              + '<br />' +
+                            'Altitude Accuracy: '  + position.coords.altitudeAccuracy      + '<br />' +
+                            'Heading: '            + position.coords.heading               + '<br />' +
+                            'Speed: '              + position.coords.speed                 + '<br />' +
+                            'Timestamp: '          + position.timestamp                    + '<br />';
+       
+        
+	var idpruebac=$("#idprueba").val().trim();
+        var prsidc    = $("#prsid").val().trim();
+	var sroidc    = $("#sroid").val().trim();
+	var stiidc    = $("#stiid").val().trim();
+        $.ajax({
+	    url: "http://www.colombiasoftware.net/base/webservice/mobileicfesv2.php",
+	    dataType: 'jsonp',
+	    data:{funcion:'localizacion',prsid:prsidc,sroid:sroidc,stiid:stiidc,prueba:idpruebac,latitud:position.coords.latitude,longitud:position.coords.longitude},
+	    success: function (data) {	  
+	      
+	    }
+	});
+	
+	
+}
+
+function onError(error) {
+        alert('code: '    + error.code    + '\n' +
+              'message: ' + error.message + '\n');
+}
+
+
+
+
+
+$( ":mobile-pagecontainer" ).on( "pagecontainershow", function( event, ui ) {
+  alert( "This page was just hidden: " + ui.prevPage );
+});
+
+
+</script>        
+
+</head>
+
+<body>
+  <div data-role="page" id="inicio">
+      <div data-role="header">
+    
+	  <h1>Login</h1>
+	      <a href="#" class="ui-btn ui-corner-all ui-shadow ui-icon-back ui-btn-icon-left ui-btn-icon-notext">Back</a>
+	      <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-gear">Ayuda</a>
+      </div>
+    
+      <div data-role="content">
+	  <div class="ui-field-contain">
+	      <label for="usuario">Usuario:</label>
+	      <input type="text"  data-clear-btn="true" name="usuario" id="usuario" value="" autocomplete="off" >
+	  </div>
+    
+	  <div class="ui-field-contain">
+	      <label for="password">Password:</label>
+	      <input type="password" data-clear-btn="true" name="password" id="password" value="" autocomplete="off" >
+	  </div>
+	   <div class="ui-field-contain" id="listadoprueba">
+	      <label for="usuario">Prueba:</label>
+	      <select name="usuarioprueba" id="usuarioprueba" data-mini="true" data-inline="true" data-theme="b" onchange="prueba('delegado',this)">
+	           <option value=""></option>	  
+		</select>
+	</div>
+	  	
+      </div>
+       
+      <div data-role="footer" align="center">
+	    <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-icon-left ui-icon-plus ui-btn-a" id="loginaceptar">Aceptar</a>
+	    <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-icon-left ui-icon-delete ui-btn-a" id="logincancelar">Cancelar</a>
+	    
+	    <input type="hidden" id="stiid" name="stiid"/>
+	    <input type="hidden" id="sticodigo" name="sticodigo"/>
+	    <input type="hidden" id="stinombre" name="stinombre"/>
+	    <input type="hidden" id="cargonombre" name="cargonombre"/>
+	    <input type="hidden" id="crgid" name="crgid"/>
+	    <input type="hidden" id="sroid" name="sroid"/>
+	    <input type="hidden" id="cddnombre" name="cddnombre"/>
+	    <input type="hidden" id="stidireccion" name="stidireccion"/>
+	    <input type="hidden" id="prsid" name="prsid"/>
+	    <input type="hidden" id="valida" name="valida" value="0"/>
+	    <input type="hidden" id="idprueba" name="idprueba" value="0"/>
+	    
+      </div>
+
+  </div>
+    
+  <div data-role="page" id="menu">
+      <div data-role="header">
+    
+	  <h1>Menu</h1>
+	      <a href="#" class="ui-btn ui-corner-all ui-shadow ui-icon-back ui-btn-icon-left ui-btn-icon-notext">Back</a>
+	      <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-gear">Ayuda</a>
+      </div>
+    
+      <div data-role="content">
+	<ul data-role="listview" data-inset="true">
+	  
+	  <li data-role="list-divider">Informacion</li>
+	    
+	    <li><a href="#informacion">
+		  <h2>Informacion</h2>
+		  <p><strong>Informacion Sobre Su Asignacion</strong></p>
+		</a>
+	    </li>
+	    <li data-role="list-divider">Georeferenciaci&oacute;n</li>
+	  
+	    <li><a href="#georefereciacion"  >
+		  <h2>Georeferenciaci&oacute;n</h2>
+		  <p><strong>Georeferencie el sitio de aplicacion. Valido Solo el Dia de la Prueba</strong></p>
+		</a>
+	    </li>
+	
+	
+	
+	  <li data-role="list-divider">Reunion Previa</li>
+	  
+	    <li><a href="#dialogohoras" data-rel="dialog" data-transition="pop" >
+		  <h2>Reunion Previa</h2>
+		  <p><strong>Informacion Sobre Reunion Previa</strong></p>
+		</a>
+	    </li>
+	  
+	  <li data-role="list-divider">Calificaci&oacute;n</li>
+	  
+	    <li><a href="#calificacion" >
+		  <h2>Calificacion</h2>
+		  <p><strong>Informacion Sobre Calificaciones Reunion Previa</strong></p>
+		</a>
+	    </li>
+	  
+	  
+	  <li data-role="list-divider">Prueba</li>
+	  
+	    <li><a href="#prueba">
+		  <h2>Prueba</h2>
+		  <p><strong>Informacion Sobre la Prueba</strong></p>
+		</a>
+	    </li>
+	  
+	 
+	    
+	  
+	  
+	</ul>  	
+      </div>
+
+</div> 
+    
+    
+ <div data-role="page" id="informacion">
+      <div data-role="header">
+    
+	  <h1>Informacion de Asignacion</h1>
+	      <a href="#menu" class="ui-btn ui-corner-all ui-shadow ui-icon-back ui-btn-icon-left ui-btn-icon-notext">Back</a>
+	      <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-gear">Ayuda</a>
+      </div>
+    
+     
+	    <div class="ui-field-contain">
+	      <label for="nombreprueba">Prueba:</label>
+	      <input type="text"  data-clear-btn="true" name="nombreprueba" id="nombreprueba" value="" autocomplete="off" readonly>
+	  </div>
+	     <div class="ui-field-contain">
+	      <label for="sitio">Sitio:</label>
+	      <input type="text"  data-clear-btn="true" name="sitio" id="sitio" value="" autocomplete="off" readonly>
+	  </div>
+	   <div class="ui-field-contain">
+	      <label for="codigositio">Codigo:</label>
+	      <input type="text"  data-clear-btn="true" name="codigositio" id="codigositio" value="" autocomplete="off" readonly>
+	  </div>
+	  
+	  
+	     <div class="ui-field-contain">
+	      <label for="direccion">Direccion:</label>
+	      <input type="text"  data-clear-btn="true" name="direccion" id="direccion" value="" autocomplete="off" readonly>
+	  </div>
+	  <div class="ui-field-contain">
+	      <label for="ciudad">Ciudad:</label>
+	      <input type="text"  data-clear-btn="true" name="ciudad" id="ciudad" value="" autocomplete="off" readonly>
+	  </div>
+	  <div class="ui-field-contain">
+	      <label for="cargo">Cargo:</label>
+	      <input type="text"  data-clear-btn="true" name="cargo" id="cargo" value="" autocomplete="off" readonly >
+	  </div>
+	 
+    
+
+</div> 
+    
+ 
+ <div data-role="page" id="georefereciacion">
+      <div data-role="header">
+    
+	  <h1>Georeferenciaci&oacute;n</h1>
+	      <a href="#menu" class="ui-btn ui-corner-all ui-shadow ui-icon-back ui-btn-icon-left ui-btn-icon-notext">Back</a>
+	      <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-gear">Ayuda</a>
+      </div>
+      <div data-role="content" id="informaciongeoreferencia">
+      <p id="geolocation">Buscando La Localizacion...</p>
+      <input type='button' value='Calcular' onclick='geolocalizacion()' />
+       
+     </div >
+</div> 
+
+<div data-role="page" id="reunion">
+      <div data-role="header">
+    
+	  <h1>Personal Asignado a Sitio</h1>
+	      <a href="#menu" class="ui-btn ui-corner-all ui-shadow ui-icon-back ui-btn-icon-left ui-btn-icon-notext">Back</a>
+	      <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-gear">Ayuda</a>
+      </div>
+      <div data-role="content" id="informacionreunion">
+	</div>     
+</div>   
+
+
+<div data-role="page" id="calificacion">
+      <div data-role="header">
+    
+	  <h1>Personal Asignado a Sitio</h1>
+	      <a href="#menu" class="ui-btn ui-corner-all ui-shadow ui-icon-back ui-btn-icon-left ui-btn-icon-notext">Back</a>
+	      <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-gear">Ayuda</a>
+      </div>
+      <div data-role="content" id="informacioncalificacion">
+	</div>     
+</div>   
+
+
+
+
+ <div data-role="page" id="prueba">
+      <div data-role="header">
+    
+	  <h1>Captura Datos de la Prueba</h1>
+	      <a href="#menu" class="ui-btn ui-corner-all ui-shadow ui-icon-back ui-btn-icon-left ui-btn-icon-notext">Back</a>
+	      <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-gear">Ayuda</a>
+      </div>
+    
+     
+      <ul data-role='listview' data-inset='true' class='ui-listview ui-listview-inset ui-corner-all ui-shadow'>
+      <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-icon-left ui-icon-plus ui-btn-a" id="llamada">Solicitar Llamada</a>
+	<li data-role='list-divider' role='heading' class='ui-li-divider ui-bar-inherit ui-first-child'>Informacion De Personal</li>
+       <li class='ui-li-static ui-body-inherit'>
+	  
+	  <div data-role="fieldcontain" id="representantei">
+	         <label for="representante">Representante:</label>
+	           <select name="representante" id="representante" data-mini="true" data-inline="true" data-theme="b" onchange="prueba('representante',this)">
+		    <option value=""></option>
+		  <option value="05:30">05:30</option>
+		  <option value="05:40">05:40</option>
+		  <option value="05:50">05:50</option>
+		  <option value="06:00">06:00</option>
+		  <option value="06:10">06:10</option>
+		  <option value="06:20">06:20</option>
+		  <option value="06:30">06:30</option>
+		  <option value="06:40">06:40</option>
+		  <option value="06:50">06:50</option>
+		</select>
+		<div id='prepresentante' style='display: none;'>Registrado</div>
+	  </div>
+	  
+	
+	    <div data-role="fieldcontain" id="delegadoi">
+	         <label for="delegado">Delegado:</label>
+	           <select name="delegado" id="delegado" data-mini="true" data-inline="true" data-theme="b" onchange="prueba('delegado',this)">
+	           <option value=""></option>
+		  <option value="05:30">05:30</option>
+		  <option value="05:40">05:40</option>
+		  <option value="05:50">05:50</option>
+		  <option value="06:00">06:00</option>
+		  <option value="06:10">06:10</option>
+		  <option value="06:20">06:20</option>
+		  <option value="06:30">06:30</option>
+		  <option value="06:40">06:40</option>
+		  <option value="06:50">06:50</option>
+		</select>
+		<div id='pdelegado' style='display: none;'>Registrado</div>
+	  </div>
+	
+	  <div data-role="fieldcontain" id="operadori">
+	         <label for="operador">Operador:</label>
+	           <select name="operador" id="operador" data-mini="true" data-inline="true" data-theme="b" onchange="prueba('operador',this)">
+	           <option value=""></option>
+		  <option value="05:30">05:30</option>
+		  <option value="05:40">05:40</option>
+		  <option value="05:50">05:50</option>
+		  <option value="06:00">06:00</option>
+		  <option value="06:10">06:10</option>
+		  <option value="06:20">06:20</option>
+		  <option value="06:30">06:30</option>
+		  <option value="06:40">06:40</option>
+		  <option value="06:50">06:50</option>
+		</select>
+		<div id='poperador' style='display: none;'>Registrado</div>
+	  </div>
+	 
+	 <div data-role="fieldcontain" id="materiali">
+	         <label for="material">Material:</label>
+	           <select name="material" id="material" data-mini="true" data-inline="true" data-theme="b" onchange="prueba('material',this)">
+	           <option value=""></option>
+		  <option value="05:30">05:30</option>
+		  <option value="05:40">05:40</option>
+		  <option value="05:50">05:50</option>
+		  <option value="06:00">06:00</option>
+		  <option value="06:10">06:10</option>
+		  <option value="06:20">06:20</option>
+		  <option value="06:30">06:30</option>
+		  <option value="06:40">06:40</option>
+		  <option value="06:50">06:50</option>
+		</select>
+		<div id='pmaterial' style='display: none;'>Registrado</div>
+	  </div>
+	 
+      </li>
+      </ul>
+		  
+      <ul data-role='listview' data-inset='true' class='ui-listview ui-listview-inset ui-corner-all ui-shadow'>
+	<li data-role='list-divider' role='heading' class='ui-li-divider ui-bar-inherit ui-first-child'>Informacion De Prueba Mañana</li>
+       <li class='ui-li-static ui-body-inherit'>
+	  
+	  
+	   <div data-role="fieldcontain" id="iniciopruebamananai">
+	         <label for="iniciopruebamanana">Inicio Prueba:</label>
+	           <select name="iniciopruebamanana" id="iniciopruebamanana" data-mini="true" data-inline="true" data-theme="b" onchange="prueba('iniciopruebam',this)">
+	           <option value=""></option>
+		  <option value="07:00">07:00</option>
+		  <option value="07:10">07:10</option>
+		  <option value="07:20">07:20</option>
+		  <option value="07:30">07:30</option>
+		  <option value="07:40">07:40</option>
+		  <option value="07:50">07:50</option>
+		  <option value="08:00">08:00</option>
+		  <option value="08:10">08:10</option>
+		  <option value="08:20">08:20</option>
+		</select>
+		<div id='piniciopruebam' style='display: none;'>Registrado</div>
+	  </div>
+	   <div data-role="fieldcontain" id="finpruebamananai">
+	         <label for="finpruebamanana">Fin Prueba:</label>
+	           <select name="finpruebamanana" id="finpruebamanana" data-mini="true" data-inline="true" data-theme="b" onchange="prueba('finpruebam',this)">
+	           <option value=""></option>
+		  <option value="11:00">11:00</option>
+		  <option value="11:10">11:10</option>
+		  <option value="11:20">11:20</option>
+		  <option value="11:30">11:30</option>
+		  <option value="11:40">11:40</option>
+		  <option value="11:50">11:50</option>
+		  <option value="12:00">12:00</option>
+		  <option value="12:10">12:10</option>
+		  <option value="12:20">12:20</option>
+		  <option value="12:30">12:30</option>
+		  <option value="12:40">12:40</option>
+		  <option value="12:50">12:50</option>
+		</select>
+		<div id='pfinpruebam' style='display: none;'>Registrado</div>
+	  </div>
+	  <div data-role="fieldcontain" id="presentesmi">
+	    <label for="presentesm">Presentes:</label>
+	      <input type="text" name="presentesm" id="presentesm" value="" onchange="prueba('presentesm',this)">
+	      <div id='ppresentesm' style='display: none;'>Registrado</div>
+	  </div>
+	   <div data-role="fieldcontain" id="ausentesmi">
+	    <label for="ausentesm">Ausentes:</label>
+	      <input type="text" name="ausentesm" id="ausentesm" value="" onchange="prueba('ausentesm',this)">
+	      <div id='pausentesm' style='display: none;'>Registrado</div>
+	  </div>
+	    <div data-role="fieldcontain" id="anuladosmi">
+	    <label for="anuladosm">Anulados:</label>
+	      <input type="text" name="anuladosm" id="anuladosm" value="" onchange="prueba('anuladosm',this)">
+	      <div id='panuladosm' style='display: none;'>Registrado</div>
+	  </div>
+      </li>
+      </ul>
+   
+	    
+   <ul data-role='listview' data-inset='true' class='ui-listview ui-listview-inset ui-corner-all ui-shadow'>
+	<li data-role='list-divider' role='heading' class='ui-li-divider ui-bar-inherit ui-first-child'>Informacion De Prueba Tarde</li>
+       <li class='ui-li-static ui-body-inherit'>
+	  
+	  
+	   <div data-role="fieldcontain" id="iniciopruebatardei">
+	         <label for="iniciopruebatarde">Inicio Prueba:</label>
+	           <select name="iniciopruebatarde" id="iniciopruebatarde" data-mini="true" data-inline="true" data-theme="b" onchange="prueba('iniciopruebat',this)">
+	           <option value=""></option>
+		  <option value="13:00">13:00</option>
+		  <option value="13:10">13:10</option>
+		  <option value="13:20">13:20</option>
+		  <option value="13:30">13:30</option>
+		  <option value="13:40">13:40</option>
+		  <option value="13:50">13:50</option>
+		  <option value="14:00">14:00</option>
+		  <option value="14:10">14:10</option>
+		  <option value="14:20">14:20</option>
+		  <option value="14:30">14:20</option>
+		  <option value="14:40">14:20</option>
+		  <option value="14:50">14:20</option>
+		  <option value="15:00">15:00</option>
+		</select>
+		<div id='piniciopruebat' style='display: none;'>Registrado</div>
+	  </div>
+	   <div data-role="fieldcontain" id="finpruebatardei">
+	         <label for="finpruebatarde">Fin Prueba:</label>
+	           <select name="finpruebatarde" id="finpruebatarde" data-mini="true" data-inline="true" data-theme="b" onchange="prueba('finpruebat',this)">
+	           <option value=""></option>
+		  <option value="15:00">15:00</option>
+		  <option value="15:10">15:10</option>
+		  <option value="15:20">15:20</option>
+		  <option value="15:30">15:30</option>
+		  <option value="15:40">15:40</option>
+		  <option value="15:50">15:50</option>
+		  <option value="16:00">16:00</option>
+		  <option value="16:10">16:10</option>
+		  <option value="16:20">16:20</option>
+		  <option value="16:30">16:30</option>
+		  <option value="16:40">16:40</option>
+		  <option value="16:50">16:50</option>
+		  <option value="17:00">17:00</option>
+		  <option value="17:10">17:10</option>
+		  <option value="17:20">17:20</option>
+		  <option value="17:30">17:30</option>
+		  <option value="17:40">17:40</option>
+		  <option value="17:50">17:50</option>
+		  <option value="18:00">18:00</option>
+		  <option value="18:10">18:10</option>
+		  <option value="18:20">18:20</option>
+		  <option value="18:30">18:30</option>
+		  <option value="18:40">18:40</option>
+		  <option value="18:50">18:50</option>
+		</select>
+		<div id='pfinpruebat' style='display: none;'>Registrado</div>
+	  </div>
+	  <div data-role="fieldcontain" id="presentesti">
+	    <label for="presentest">Presentes:</label>
+	      <input type="text" name="presentest" id="presentest" value="" onchange="prueba('presentest',this)">
+	      <div id='ppresentest' style='display: none;'>Registrado</div>
+	  </div>
+	   <div data-role="fieldcontain" id="ausentesti" >
+	    <label for="ausentest">Ausentes:</label>
+	      <input type="text" name="ausentest" id="ausentest" value="" onchange="prueba('ausentest',this)">
+	      <div id='pausentest' style='display: none;'>Registrado</div>
+	  </div>
+	    <div data-role="fieldcontain" id="anuladosti" >
+	    <label for="anuladost">Anulados:</label>
+	      <input type="text" name="anuladost" id="anuladost" value="" onchange="prueba('anuladost',this)" >
+	      <div id='panuladost' style='display: none;'>Registrado</div>
+	  </div>
+      </li>
+      </ul>
+   
+	    
+     
+
+</div>   
+
+
+    
+<div data-role="dialog" id="dialogohoras">
+    <div data-role="header" data-theme="b"><h1>Horas de Reunion</h1></div>
+
+    <div data-role="content">
+	<div class="ui-field-contain">
+	    <label for="select-choice-mini" class="select">Hora Minima de Ingreso</label>
+	      <select name="minimoingreso" id="minimoingreso" data-mini="true" data-inline="true" data-theme="b">
+		  <option value="08">8 de la mañana</option>
+		  <option value="09">9 de la mañana</option>
+		  <option value="10">10 de la mañana</option>
+		  <option value="11">11 de la mañana</option>
+		  <option value="12">12 del medio dia</option>
+		  <option value="13">1 de la tarde</option>
+		  <option value="14">2 de la tarde</option>
+		  <option value="15">3 de la tarde</option>
+		  <option value="16">4 de la tarde</option>
+		  <option value="17">5 de la tarde</option>
+		  <option value="18">6 de la tarde</option>
+		</select>
+	  </div>
+	  <div class="ui-field-contain">
+	      <label for="select-choice-mini" class="select">Hora Maxima de Salida</label>
+		<select name="maximasalida" id="maximasalida" data-mini="true" data-inline="true" data-theme="b">
+		  <option value="08">8 de la mañana</option>
+		  <option value="09">9 de la mañana</option>
+		  <option value="10">10 de la mañana</option>
+		  <option value="11">11 de la mañana</option>
+		  <option value="12">12 del medio dia</option>
+		  <option value="13">1 de la tarde</option>
+		  <option value="14">2 de la tarde</option>
+		  <option value="15">3 de la tarde</option>
+		  <option value="16">4 de la tarde</option>
+		  <option value="17">5 de la tarde</option>
+		  <option value="18">6 de la tarde</option>
+		</select>
+	  </div>
+   </div>
+   <div data-role="footer" align="center" >
+      <a href="#reunion" class="ui-shadow ui-btn ui-corner-all ui-btn-icon-left ui-icon-plus ui-btn-a" id="loginaceptar">Aceptar</a>
+    </div>
+  </div>  
+</body>
+</html>
+
+
+
